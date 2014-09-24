@@ -1,0 +1,17 @@
+#!/bin/bash
+
+LIBNAME=libvbs
+LOCAL_LIBPATH=${LOCAL_LIBPATH:-~/.local/lib}
+LIBPATH=${LIBPATH:-/usr/local/lib}
+
+if [ -f $LOCAL_LIBPATH/$LIBNAME ]
+then
+    . $LOCAL_LIBPATH/$LIBNAME
+elif [ -f $LIBPATH/$LIBNAME ]
+then
+    . $LIBPATH/$LIBNAME
+else
+    quit "$LIBNAME not found in either $LOCAL_LIBPATH or $LIBPATH"
+fi
+
+kill_openbts

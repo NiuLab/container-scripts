@@ -1,0 +1,36 @@
+#!/bin/bash
+
+LIBNAME=libvbs
+LOCAL_LIBPATH=${LOCAL_LIBPATH:-~/.local/lib}
+LIBPATH=${LIBPATH:-/usr/local/lib}
+
+if [ -f $LOCAL_LIBPATH/$LIBNAME ]
+then
+    . $LOCAL_LIBPATH/$LIBNAME
+elif [ -f $LIBPATH/$LIBNAME ]
+then
+    . $LIBPATH/$LIBNAME
+else
+    quit "$LIBNAME not found in either $LOCAL_LIBPATH or $LIBPATH"
+fi
+
+echo starting logger
+LOGGER_PID=$(run_logger)
+echo $LOGGER_PID
+
+echo starting sipauthserve
+AUTH_PID=$(run_sipauthserve)
+echo $AUTH_PID
+
+echo starting smqueue
+SMQ_PID=$(run_smqueue)
+echo $SMQ_PID
+
+echo starting asterisk
+AST_PID=$(run_asterisk)
+echo $AST_PID
+
+check_logger
+check_sipauthserve
+check_smqueue
+check_asterisk

@@ -1,0 +1,81 @@
+# vim: filetype=sh
+
+quit() {
+    echo $1
+    exit $2
+}
+
+run_logger() {
+    . /etc/default/rsyslog
+    /usr/sbin/rsyslogd $RSYSLOGD_OPTIONS
+    echo $!
+}
+
+run_sipauthserve() {
+    cd /OpenBTS
+    /OpenBTS/sipauthserve >/dev/null 2>&1 &
+    echo $!
+}
+
+run_smqueue() {
+    cd /OpenBTS
+    /OpenBTS/smqueue >/dev/null 2>&1 &
+    echo $!
+}
+
+run_openbts() {
+    cd /OpenBTS
+    /OpenBTS/OpenBTS --uhd_addr $UHDADDR >/dev/null 2>&1 &
+    echo $!
+}
+
+run_asterisk() {
+    if [ ! -d /var/run/asterisk ]; then
+        mkdir -p /var/run/asterisk
+        chown asterisk: /var/run/asterisk
+        chown -R asterisk:www-data /var/lib/asterisk/sqlite3dir
+    fi
+    /usr/sbin/asterisk -U asterisk -g -f >/dev/null 2>&1 &
+    echo $!
+}
+
+check_logger() {
+    echo rsyslogd $(pgrep rsyslogd)
+}
+
+check_sipauthserve() {
+    echo sipauthserve $(pgrep sipauthserve)
+}
+
+check_smqueue() {
+    echo smqueue $(pgrep smqueue)
+}
+
+check_openbts() {
+    echo OpenBTS $(pgrep OpenBTS)
+}
+
+check_asterisk() {
+    echo asterisk $(pgrep asterisk)
+}
+
+kill_asterisk() {
+    killall asterisk
+}
+
+kill_openbts() {
+    killall OpenBTS
+    killall transceiver
+}
+
+kill_smqueue() {
+    killall smqueue
+}
+
+kill_sipauthserve() {
+    killall sipauthserve
+}
+
+kill_logger() {
+    killall rsyslogd
+}

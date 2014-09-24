@@ -1,0 +1,43 @@
+#!/bin/bash
+
+LIBNAME=libvbs
+LOCAL_LIBPATH=${LOCAL_LIBPATH:-~/.local/lib}
+LIBPATH=${LIBPATH:-/usr/local/lib}
+
+if [ -f $LOCAL_LIBPATH/$LIBNAME ]
+then
+    . $LOCAL_LIBPATH/$LIBNAME
+elif [ -f $LIBPATH/$LIBNAME ]
+then
+    . $LIBPATH/$LIBNAME
+else
+    quit "$LIBNAME not found in either $LOCAL_LIBPATH or $LIBPATH"
+fi
+
+LOG_ORIG=/var/log/OpenBTS.log
+LOG_STORE=$HOME/openbts-logs
+
+kill_asterisk
+kill_smqueue
+kill_sipauthserve
+kill_logger
+
+if [ ! -e $LOG_STORE ]
+then
+    mkdir -p $LOG_STORE
+elif [ ! -d $LOG_STORE ]
+then
+    echo 'Fuck!' "$LOG_STORE is not a directory"
+fi
+
+LOG_FILE=$LOG_STORE/$(date +%F-%H-%M-%S).log
+if [ -f $LOG_ORIG ]
+then
+    cp $LOG_ORIG $LOG_FILE
+    sudo bash -c "echo > $LOG_ORIG"
+elif [ -e $LOG_ORIG ]
+then
+    echo 'Strange!' "$LOG_ORIG is not a regular file"
+else
+    echo "$LOG_ORIG does not exist"
+fi
