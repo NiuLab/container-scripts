@@ -1,4 +1,4 @@
-BINS = run_bts run_sip stop_bts stop_sip
+BINS = run_bts run_sip stop_bts stop_sip openbts_start openbts_stop sipserver_start sipserver_stop
 LIBS = libvbs
 
 INSTALL = install

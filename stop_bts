@@ -15,3 +15,20 @@ else
 fi
 
 kill_openbts
+
+LOG_ORIG=/var/log/OpenBTS.log
+LOG_STORE=$HOME/openbts-logs
+
+mk_dir $LOG_STORE
+
+LOG_FILE=$LOG_STORE/$(date +%F-%H-%M-%S)-bts.log
+if [ -f $LOG_ORIG ]
+then
+    cp $LOG_ORIG $LOG_FILE
+    sudo bash -c "echo > $LOG_ORIG"
+elif [ -e $LOG_ORIG ]
+then
+    echo 'Strange!' "$LOG_ORIG is not a regular file"
+else
+    echo "$LOG_ORIG does not exist"
+fi

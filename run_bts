@@ -16,6 +16,13 @@ else
 fi
 
 /home/openbts/openbtsconfig SIP.Local.IP $IP_ADDR
+/home/openbts/openbtsconfig SIP.Proxy.Registration $SIP_ADDR:5064 # The IP/Port of sipauthserve
+/home/openbts/openbtsconfig SIP.Proxy.SMS $SIP_ADDR:5063 # The IP/Port of smqueue (or FreeSWITCH)
+/home/openbts/openbtsconfig SIP.Proxy.Speech $SIP_ADDR:5060 # The IP/Port of the PBX
+
+echo starting logger
+LOGGER_PID=$(run_logger)
+echo $LOGGER_PID
 
 echo starting openbts
 BTS_PID=$(run_openbts)

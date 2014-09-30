@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if ! tmux has-session -t openbts >/dev/null 2>&1 
+then
+    echo "Error: openbts session does not exists"
+    exit 1
+fi
+
+stop_bts
+
+tmux kill-session -t openbts

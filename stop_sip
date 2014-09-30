@@ -15,22 +15,16 @@ else
 fi
 
 LOG_ORIG=/var/log/OpenBTS.log
-LOG_STORE=$HOME/openbts-logs
+LOG_STORE=$HOME/sipserver-logs
 
 kill_asterisk
 kill_smqueue
 kill_sipauthserve
 kill_logger
 
-if [ ! -e $LOG_STORE ]
-then
-    mkdir -p $LOG_STORE
-elif [ ! -d $LOG_STORE ]
-then
-    echo 'Fuck!' "$LOG_STORE is not a directory"
-fi
+mk_dir $LOG_STORE
 
-LOG_FILE=$LOG_STORE/$(date +%F-%H-%M-%S).log
+LOG_FILE=$LOG_STORE/$(date +%F-%H-%M-%S)-sip.log
 if [ -f $LOG_ORIG ]
 then
     cp $LOG_ORIG $LOG_FILE

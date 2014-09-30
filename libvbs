@@ -5,6 +5,17 @@ quit() {
     exit $2
 }
 
+mk_dir() {
+    DIR=$1
+    if [ ! -e $DIR ]
+    then
+        mkdir -p $DIR
+    elif [ ! -d $DIR ]
+    then
+        quit "Fuck! $DIR is not a directory"
+    fi
+}
+
 run_logger() {
     . /etc/default/rsyslog
     /usr/sbin/rsyslogd $RSYSLOGD_OPTIONS
@@ -25,7 +36,7 @@ run_smqueue() {
 
 run_openbts() {
     cd /OpenBTS
-    /OpenBTS/OpenBTS --uhd_addr $UHDADDR >/dev/null 2>&1 &
+    /OpenBTS/OpenBTS --uhd_addr $UHD_ADDR >/dev/null 2>&1 &
     echo $!
 }
 
