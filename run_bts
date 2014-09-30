@@ -3,6 +3,7 @@
 LIBNAME=libvbs
 LOCAL_LIBPATH=${LOCAL_LIBPATH:-~/.local/lib}
 LIBPATH=${LIBPATH:-/usr/local/lib}
+IP_ADDR=$(ip a show dev eth0| grep -e '\<inet\>' | awk '{print $2}' | awk -F / '{print $1}')
 
 if [ -f $LOCAL_LIBPATH/$LIBNAME ]
 then
@@ -13,6 +14,8 @@ then
 else
     quit "$LIBNAME not found in either $LOCAL_LIBPATH or $LIBPATH"
 fi
+
+/home/openbts/openbtsconfig SIP.Local.IP $IP_ADDR
 
 echo starting openbts
 BTS_PID=$(run_openbts)
