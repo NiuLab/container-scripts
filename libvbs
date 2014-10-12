@@ -43,10 +43,10 @@ run_openbts() {
 run_asterisk() {
     if [ ! -d /var/run/asterisk ]; then
         mkdir -p /var/run/asterisk
-        chown asterisk: /var/run/asterisk
-        chown -R asterisk:www-data /var/lib/asterisk/sqlite3dir
     fi
+    chown asterisk: /var/run/asterisk
     /usr/sbin/asterisk -U asterisk -g -f >/dev/null 2>&1 &
+    chown -R asterisk:www-data /var/lib/asterisk/sqlite3dir
     echo $!
 }
 
@@ -56,6 +56,7 @@ check_logger() {
 
 check_sipauthserve() {
     echo sipauthserve $(pgrep sipauthserve)
+    chown -R asterisk:www-data /var/lib/asterisk/sqlite3dir
 }
 
 check_smqueue() {
