@@ -3,7 +3,7 @@
 LIBNAME=libvbs
 LOCAL_LIBPATH=${LOCAL_LIBPATH:-~/.local/lib}
 LIBPATH=${LIBPATH:-/usr/local/lib}
-IP_ADDR=$(ip a show dev eth0| grep -e '\<inet\>' | awk '{print $2}' | awk -F / '{print $1}')
+IP_ADDR=$(get_ip eth0)
 
 if [ -f $LOCAL_LIBPATH/$LIBNAME ]
 then
@@ -15,10 +15,32 @@ else
     quit "$LIBNAME not found in either $LOCAL_LIBPATH or $LIBPATH"
 fi
 
-/home/openbts/openbtsconfig SIP.Local.IP $IP_ADDR
-/home/openbts/openbtsconfig SIP.Proxy.Registration $SIP_ADDR:5064 # The IP/Port of sipauthserve
-/home/openbts/openbtsconfig SIP.Proxy.SMS $SIP_ADDR:5063 # The IP/Port of smqueue (or FreeSWITCH)
-/home/openbts/openbtsconfig SIP.Proxy.Speech $SIP_ADDR:5060 # The IP/Port of the PBX
+if [ -n "$IP_ADDR" ]
+then
+    /home/openbts/openbtsconfig SIP.Local.IP $IP_ADDR
+fi
+
+if [ -n "$SIP_ADDR" ]
+then
+    /home/openbts/openbtsconfig SIP.Proxy.Registration $SIP_ADDR:5064 # The IP/Port of sipauthserve
+    /home/openbts/openbtsconfig SIP.Proxy.SMS $SIP_ADDR:5063 # The IP/Port of smqueue (or FreeSWITCH)
+    /home/openbts/openbtsconfig SIP.Proxy.Speech $SIP_ADDR:5060 # The IP/Port of the PBX
+fi
+
+if [ -n "$BSIC_BCC" ]
+then
+    /home/openbts/openbtsconfig GSM.CellSelection.BSIC.BCC $BSIC_BCC
+fi
+
+if [ -n "$LAC_CODE" ]
+then
+    /home/openbts/openbtsconfig GSM.Identity.LAC $LAC_CODE
+fi
+
+if [ -n "$CID_CODE" ]
+then
+    /home/openbts/openbtsconfig GSM.Identity.CI $CID_CODE
+fi
 
 echo starting logger
 LOGGER_PID=$(run_logger)

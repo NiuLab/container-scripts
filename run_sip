@@ -3,6 +3,7 @@
 LIBNAME=libvbs
 LOCAL_LIBPATH=${LOCAL_LIBPATH:-~/.local/lib}
 LIBPATH=${LIBPATH:-/usr/local/lib}
+IP_ADDR=$(get_ip eth0)
 
 if [ -f $LOCAL_LIBPATH/$LIBNAME ]
 then
@@ -12,6 +13,12 @@ then
     . $LIBPATH/$LIBNAME
 else
     quit "$LIBNAME not found in either $LOCAL_LIBPATH or $LIBPATH"
+fi
+
+if [ -n "$IP_ADDR" ]
+then
+    /home/openbts/smqueueconfig SIP.myIP $IP_ADDR
+    /home/openbts/smqueueconfig SIP.myIP2 $IP_ADDR
 fi
 
 echo starting logger

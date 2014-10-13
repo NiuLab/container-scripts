@@ -91,3 +91,8 @@ kill_sipauthserve() {
 kill_logger() {
     killall rsyslogd
 }
+
+get_ip() {
+    iface=${1:-eth0}
+    ip a show dev $iface | grep -e '\<inet\>' | awk '{print $2}' | awk -F / '{print $1}'
+}
