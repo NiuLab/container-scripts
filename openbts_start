@@ -5,7 +5,7 @@ if tmux has-session -t openbts >/dev/null 2>&1
 then
     echo "Error: openbts session alreay exists"
     exit 1
-elif tmux -q has-session
+elif tmux -q has-session >/dev/null 2>&1
 then
     tmux new-session -d -s openbts -n console
 else
@@ -16,7 +16,7 @@ tmux split-window -t openbts:0
 tmux new-window -t openbts:1 -n misc
 
 tmux send-keys -t openbts:1 'run_bts' C-m
-sleep 5
+sleep 2
 tmux send-keys -t openbts:0.0 'tail -f /var/log/OpenBTS.log' C-m
 
 tmux select-window -t openbts:1
