@@ -38,6 +38,9 @@ echo starting asterisk
 AST_PID=$(run_asterisk)
 echo $AST_PID
 
+chown -R asterisk:www-data /var/lib/asterisk/sqlite3dir
+ls -al /var/lib/asterisk/sqlite3dir
+
 check_logger
 check_sipauthserve
 check_smqueue
